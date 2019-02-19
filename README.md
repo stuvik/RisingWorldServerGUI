@@ -1,4 +1,4 @@
-# RisingWorldServerGUI
+# Rising World Server GUI
 A VERY basic GUI for the survival game 'Rising World'.
 
 'Rising World' is a sandbox survival game which deserves a better following, with nice graphics, farming, mining, fishing, and a construction process using blocks with multitudes of shapes, including round and angled blocks. Simply put, it's a pleasure to immerse yourself in.

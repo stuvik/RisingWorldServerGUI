@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 194
   Top = 111
-  Caption = 'MDI Application'
+  Caption = 'Stuvik'#39's Command Line Server Manager'
   ClientHeight = 554
   ClientWidth = 1090
   Color = clAppWorkSpace
@@ -16,6 +16,9 @@ object MainForm: TMainForm
   Position = poDefault
   WindowMenu = Window1
   OnClose = FormClose
+  DesignSize = (
+    1090
+    554)
   PixelsPerInch = 96
   TextHeight = 13
   object StatusBar: TStatusBar
@@ -30,8 +33,6 @@ object MainForm: TMainForm
     AutoHint = True
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 244
-    ExplicitWidth = 360
   end
   object ToolBar2: TToolBar
     Left = 0
@@ -47,7 +48,6 @@ object MainForm: TMainForm
     ShowHint = True
     TabOrder = 1
     Wrapable = False
-    ExplicitWidth = 360
     object ToolButton9: TToolButton
       Left = 5
       Top = 0
@@ -113,11 +113,11 @@ object MainForm: TMainForm
   object DBGrid1: TDBGrid
     Left = 0
     Top = 30
-    Width = 249
+    Width = 255
     Height = 505
     Align = alLeft
     DataSource = dsltServer
-    Options = [dgTitles, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleHotTrack]
     ReadOnly = True
     TabOrder = 2
     TitleFont.Charset = DEFAULT_CHARSET
@@ -126,6 +126,7 @@ object MainForm: TMainForm
     TitleFont.Name = 'Default'
     TitleFont.Style = []
     OnDblClick = DBGrid1DblClick
+    OnKeyPress = DBGrid1KeyPress
     Columns = <
       item
         Expanded = False
@@ -134,6 +135,16 @@ object MainForm: TMainForm
         Width = 225
         Visible = True
       end>
+  end
+  object DBNavigator1: TDBNavigator
+    Left = 254
+    Top = 494
+    Width = 41
+    Height = 41
+    DataSource = dsltServer
+    VisibleButtons = [nbRefresh]
+    Anchors = [akLeft, akBottom]
+    TabOrder = 3
   end
   object MainMenu1: TMainMenu
     Images = ImageList1
@@ -180,7 +191,7 @@ object MainForm: TMainForm
     object Setup1: TMenuItem
       Caption = '&Setup'
       object GameOverrideSwitches1: TMenuItem
-        Action = actSetupGameOverrides
+        Action = actSetupGameSwitches
       end
     end
     object Window1: TMenuItem
@@ -315,11 +326,11 @@ object MainForm: TMainForm
         't'
       OnExecute = HelpAbout1Execute
     end
-    object actSetupGameOverrides: TAction
+    object actSetupGameSwitches: TAction
       Category = 'Setup'
       Caption = '&Game Overrides'
       Hint = 'Setup Game Switches'
-      OnExecute = actSetupGameOverridesExecute
+      OnExecute = actSetupGameSwitchesExecute
     end
   end
   object ImageList1: TImageList

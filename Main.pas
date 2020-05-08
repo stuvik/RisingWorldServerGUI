@@ -64,17 +64,19 @@ type
     ImageList1: TImageList;
     Setup1: TMenuItem;
     GameOverrideSwitches1: TMenuItem;
-    actSetupGameOverrides: TAction;
+    actSetupGameSwitches: TAction;
     dsltServer: TDataSource;
     ltServer: TnxTable;
     DBGrid1: TDBGrid;
+    DBNavigator1: TDBNavigator;
     procedure FileNew1Execute(Sender: TObject);
     procedure FileOpen1Execute(Sender: TObject);
     procedure HelpAbout1Execute(Sender: TObject);
     procedure FileExit1Execute(Sender: TObject);
-    procedure actSetupGameOverridesExecute(Sender: TObject);
+    procedure actSetupGameSwitchesExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure DBGrid1KeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure CreateMDIChild(const Name: string);
@@ -89,26 +91,25 @@ implementation
 
 {$R *.dfm}
 
-uses CHILDWIN, About, USetupGameOverrides;
+uses CHILDWIN, About, USetupGameSwitches;
 
-procedure TMainForm.actSetupGameOverridesExecute(Sender: TObject);
+procedure TMainForm.actSetupGameSwitchesExecute(Sender: TObject);
 var
   I: Integer;
   FoundInstance: Boolean;
 begin // Allow only 1 instance of the setup form to be opened at a time
   FoundInstance := False;
   for I := 0 to Pred(MDIChildCount) do
-    if (MDIChildren[I] is TfmSetupGameOverrides) then
+    if (MDIChildren[I] is TfmSetupGameSwitches) then
     begin
       FoundInstance := True;
       Break;
     end;
   if not FoundInstance then
-    TfmSetupGameOverrides.Create(Application)
+    TfmSetupGameSwitches.Create(Application)
   else
   begin
-    //MDIChildren[I].SetFocus; // value of I is sitting on the form
-    MDIChildren[I].Show;
+//    MDIChildren[I].Show;
     MDIChildren[I].BringToFront;
   end;
 end;
@@ -128,18 +129,43 @@ end;
 procedure TMainForm.DBGrid1DblClick(Sender: TObject);
 var
   Child: TMDIChild;
+  I: Integer;
 begin
   { create a new MDI child window }
-
-  // TODO: Prevent opening of multiple of the same server
-
-  Child := TMDIChild.Create(Application);
-  if Child.ExistingGameServer(ltServer.FieldByName('SvrID').AsGuid) then
+  if not ltServer.IsEmpty then
   begin
-    Child.Caption := Child.tblServer.FieldByName('SvrName').AsString;
-    Child.Show;
-    Child.BringToFront;
-  end;
+    // TODO: Prevent opening of multiple of the same server
+    for I := 0 to Pred(MDIChildCount) do
+    begin
+      if (MDIChildren[I] is TMDIChild) then
+        //if (CompareText((MDIChildren[I] as TMDIChild).Caption, ltServer.FieldByName('SvrName').AsString) = 0) then
+        // Issue: GUID is NOT an Integer
+        //if ((MDIChildren[I] as TMDIChild).tblServer.FieldByName('SvrID').AsInteger = ltServer.FieldByName('SvrID').AsInteger) then
+        if CompareStr(GUIDToString((MDIChildren[I] as TMDIChild).tblServer.FieldByName('SvrID').AsGuid),
+                      GUIDToString(ltServer.FieldByName('SvrID').AsGuid)) = 0 then
+        begin
+//          (MDIChildren[I] as TMDIChild).Show;
+          (MDIChildren[I] as TMDIChild).BringToFront;
+          Exit;
+        end;
+    end;
+
+    Child := TMDIChild.Create(Application);
+    if Child.ExistingGameServer(ltServer.FieldByName('SvrID').AsGuid) then
+    begin
+      Child.Caption := Child.tblServer.FieldByName('SvrName').AsString;
+//      Child.Show;
+      Child.BringToFront;
+    end;
+  end
+  else
+    CreateMDIChild('blah');
+end;
+
+procedure TMainForm.DBGrid1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+    DBGrid1DblClick(Sender);
 end;
 
 procedure TMainForm.FileNew1Execute(Sender: TObject);

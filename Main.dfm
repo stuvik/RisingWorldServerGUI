@@ -137,7 +137,7 @@ object MainForm: TMainForm
       end>
   end
   object DBNavigator1: TDBNavigator
-    Left = 254
+    Left = 256
     Top = 494
     Width = 41
     Height = 41

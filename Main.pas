@@ -77,6 +77,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure DBGrid1DblClick(Sender: TObject);
     procedure DBGrid1KeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     procedure CreateMDIChild(const Name: string);
@@ -182,6 +183,12 @@ end;
 procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   ltServer.Active := False; // Needs to be closed before the application closes
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  DBNavigator1.Left := DBGrid1.Width;
+  DBNavigator1.Top := Self.ClientHeight - DBNavigator1.Height - StatusBar.Height; //DBGrid1.Height - DBNavigator1.Height;
 end;
 
 procedure TMainForm.HelpAbout1Execute(Sender: TObject);
